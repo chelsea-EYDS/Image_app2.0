@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Image recognition app ",
+    "githubUrl": "https://github.com/chelsea-angelena-freshworks/Image_app2.0"
   }
 }

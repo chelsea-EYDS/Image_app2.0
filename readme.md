@@ -23,7 +23,7 @@ Run one of:
 -  `expo start` (scan code to run on your device - Expo Go app must be installed)
 - `expo start --web` (runs in browser)
 - `expo start --ios` (simulator must be installed)
-- `expo start --andriod`
+- `expo start --android`
 
 ## Contributing
 
