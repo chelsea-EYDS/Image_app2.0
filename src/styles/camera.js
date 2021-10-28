@@ -1,0 +1,78 @@
+import * as React from 'react'
+import { StyleSheet } from 'react-native'
+
+export const styles = StyleSheet.create({
+	mainView: {
+		position: 'absolute',
+		bottom: 0,
+		flexDirection: 'row',
+		flex: 1,
+		width: '100%',
+		padding: 20,
+		margin: 0,
+		justifyContent: 'center',
+		backgroundColor: 'black',
+	},
+	container: {
+		flex: 1,
+		width: '100%',
+		height: 600,
+		marginTop: 32,
+		justifyContent: 'flex-end',
+	},
+	butonView: {
+		flexDirection: 'row',
+		flex: 1,
+		width: '75%',
+		margin: 0,
+		justifyContent: 'space-evenly',
+		backgroundColor: 'transparent',
+	},
+	text: {
+		fontSize: 32,
+		color: 'white',
+	},
+	icons: {
+		fontSize: 24,
+		color: 'white',
+		alignSelf: 'center',
+	},
+	buttonContainer: {
+		backgroundColor: 'black',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+		alignSelf: 'center',
+		width: '100%',
+		paddingBottom: 32,
+		paddingTop: 24,
+	},
+	shutter: {
+		width: 40,
+		height: 40,
+		color: 'white',
+		backgroundColor: 'white',
+		borderRadius: 40,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	innerShutter: {
+		width: 32,
+		height: 32,
+		color: 'black',
+		backgroundColor: 'black',
+		borderRadius: 32,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	centerShutter: {
+		width: 24,
+		height: 24,
+		color: 'white',
+		backgroundColor: 'white',
+		borderRadius: 24,
+	},
+})
