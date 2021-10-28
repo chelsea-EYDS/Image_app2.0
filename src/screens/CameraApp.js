@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Text, Platform, View, TouchableOpacity } from 'react-native'
 import { Camera } from 'expo-camera'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useAlert, useCamera } from '../hooks'
-import { CameraPreview } from './CameraPreview'
+import { useCamera } from '../hooks'
+import CameraPreview from './CameraPreview'
 
 export default function CameraApp({ navigation }){
 	const {
@@ -23,8 +23,6 @@ export default function CameraApp({ navigation }){
 		switchCamera,
 		onSnap,
 	} = useCamera()
-
-	const { createAlert } = useAlert()
 
 	return (
 		<>

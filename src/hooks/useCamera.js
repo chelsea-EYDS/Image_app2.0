@@ -10,7 +10,7 @@ import clarifai from 'clarifai'
 
 export const useCamera = () => {
 	const [photo, setPhoto] = useState(null)
-
+  const [base64, setBase64]=useState(null)
 	const [loading, setLoading] = useState(false)
 	const [response, setResponse] = useState(null)
 
@@ -62,28 +62,39 @@ export const useCamera = () => {
 	}
 
 	const pickImage = async () => {
+    try{
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
 			allowsEditing: true,
 			aspect: [4, 3],
-			quality: 1,
+			quality: .3,
 			base64: true,
 		})
-
 		if (!result.cancelled) {
 			setPhoto(result)
 			setPreviewVisible(true)
+      setBase64(result.base64)
 		}
+  }catch(err){
+    console.log(err)
+  }
 	}
 
 	const onSnap = async () => {
+    try{
 		if (cameraRef.current && cameraReady) {
-			const options = { quality: 0.7, base64: true }
-			const photo = await cameraRef.current.takePictureAsync(options)
+			const options = { quality: 0.3, base64: true }
+			const result = await cameraRef.current.takePictureAsync(options)
 			setPreviewVisible(true)
-			setPhoto(photo)
+			setPhoto(result)
+    
+      const base = result.base64.split(',')
+      setBase64(base[1])
 		}
-	}
+  }catch(err){
+    console.log(err)
+  }
+}
 
 	const toggleFlash = () => {
 		if (flashMode === 'on') {
@@ -95,20 +106,18 @@ export const useCamera = () => {
 		}
 	}
 
-	const identifyImage = async (photo) => {
+	const identifyImage = async () => {
 		setLoading(true)
 		const app = new clarifai.App({
 			apiKey: api_key,
 		})
-    const base64 = photo.split(',')
-    
 		try {
 			const response = await app.models.predict(clarifai.GENERAL_MODEL, {
-				base64: base64[1]
+				base64: base64
 			})
-
 			createAlert(response.outputs[0].data.concepts[0].name)
 			setLoading(false)
+      setBase64(null)
 		} catch (err) {
 			console.log(err)
 			setLoading(false)
@@ -125,7 +134,7 @@ export const useCamera = () => {
 		previewVisible,
 
 		photo,
-		identifyImage: (photo) => identifyImage(photo),
+		identifyImage,
 
 		flashMode,
 		loading,

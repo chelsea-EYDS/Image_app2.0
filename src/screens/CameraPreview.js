@@ -1,5 +1,5 @@
 import { ImageBackground, TouchableOpacity, View, Alert } from 'react-native'
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { styles } from '../styles/camera'
@@ -43,7 +43,7 @@ export default function CameraPreview({
 					/>
 				</TouchableOpacity>
 
-				<TouchableOpacity onPress={() => identifyImage(photo.base64)}>
+				<TouchableOpacity onPress={identifyImage}>
 					<MaterialCommunityIcons name='search-web' size={40} color='white' />
 				</TouchableOpacity>
 				<TouchableOpacity

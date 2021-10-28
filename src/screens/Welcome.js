@@ -1,8 +1,6 @@
 import React from 'react'
 import { ImageBackground, View } from 'react-native'
-import { Button } from '../components/Button'
-import { Screen } from '../components/Screen'
-import { TitleText } from '../components/TitleText'
+import { TitleText, Button, Screen } from '../components'
 import { styles } from '../styles/welcome'
 
 const image = {
@@ -23,12 +21,8 @@ export default function Welcome({ navigation }){
 					<Button
 						onPress={() => navigation.navigate('Camera')}
 						text='Go To Camera'
-					/>
+					/> 
 
-					<Button
-						onPress={() => navigation.navigate('Information')}
-						text='Information'
-					/>
 				</View>
 			</ImageBackground>
 		</Screen>

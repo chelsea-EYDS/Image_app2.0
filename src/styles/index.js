@@ -1,7 +1,0 @@
-export * from './button'
-export * from './camera'
-export * from './information'
-export * from './loading'
-export * from './screen'
-export * from './text'
-export * from './welcome'
