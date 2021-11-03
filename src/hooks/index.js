@@ -1,3 +1,4 @@
 export * from './useAlert'
 export * from './useCamera'
-export * from './useClarifai'
+export * from './useApi'
+export * from './usePlantId'
