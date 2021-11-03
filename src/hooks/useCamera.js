@@ -2,151 +2,151 @@ import React, { useRef, useEffect, useState } from 'react'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { Camera } from 'expo-camera'
-import { REACT_APP_CLAR_API_KEY } from '@env'
-import { Platform, StyleSheet, Text, View } from 'react-native'
 import { useAlert } from '.'
-import clarifai from 'clarifai'
-
+import { Axios } from '../utils/api'
 
 export const useCamera = () => {
-	const [photo, setPhoto] = useState(null)
-  const [base64, setBase64]=useState(null)
-	const [loading, setLoading] = useState(false)
-	const [response, setResponse] = useState(null)
+  const [photo, setPhoto] = useState(null)
+  const [base64, setBase64] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [cameraReady, setCameraReady] = useState(false)
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
+  const [hasPermission, setHasPermission] = useState(null)
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [flashMode, setFlashMode] = useState('off')
 
-	const [cameraReady, setCameraReady] = useState(false)
-	const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
-	const [hasPermission, setHasPermission] = useState(null)
-	const [previewVisible, setPreviewVisible] = useState(false)
-	const [flashMode, setFlashMode] = useState('off')
+  const [data, setData] = useState('')
+  const [visible, setVisible] = useState(false)
+  const { createAlert } = useAlert()
 
-  const {createAlert}=useAlert()
+  const cameraRef = useRef()
 
-	const cameraRef = useRef()
-  const api_key = REACT_APP_CLAR_API_KEY
-  
-  console.log(api_key)
-
-	useEffect(() => {
-		;(async () => {
-			if (await Camera.isAvailableAsync()) {
-				const types = await Camera.getAvailableCameraTypesAsync()
-				setCameraType(
-					Platform.OS === 'web'
-						? Camera.Constants.Type.front
-						: Camera.Constants.Type.back
-				)
-				if (Platform.OS === 'web') {
-					setHasPermission(true)
-				} else {
-					const { status } = await Camera.getCameraPermissionsAsync(
-						Permissions.CAMERA,
-						Permissions.MEDIA_LIBRARY
-					)
-					setHasPermission(status === 'granted')
-				}
-			}
-		})()
-	}, [])
-
-	const switchCamera = () => {
-		setCameraType((prevCameraType) =>
-			prevCameraType === Camera.Constants.Type.back
-				? Camera.Constants.Type.front
-				: Camera.Constants.Type.back
-		)
-	}
-
-	const onCameraReady = () => {
-		setCameraReady(true)
-	}
-
-	const pickImage = async () => {
-    try{
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: .3,
-			base64: true,
-		})
-		if (!result.cancelled) {
-			setPhoto(result)
-			setPreviewVisible(true)
-      setBase64(result.base64)
-		}
-  }catch(err){
-    console.log(err)
+  const askCameraPermission = async () => {
+    const { status } = await Camera.requestPermissionsAsync(
+      Permissions.CAMERA,
+      Permissions.MEDIA_LIBRARY
+    )
+    setCameraType(Camera.Constants.Type.back)
+    setHasPermission(status === 'granted')
+    setCameraReady(true)
   }
-	}
+  useEffect(() => {
+    askCameraPermission()
+  }, [])
 
-	const onSnap = async () => {
-    try{
-		if (cameraRef.current && cameraReady) {
-			const options = { quality: 0.3, base64: true }
-			const result = await cameraRef.current.takePictureAsync(options)
-			setPreviewVisible(true)
-			setPhoto(result)
-    
-      const base = result.base64.split(',')
-      setBase64(base[1])
-		}
-  }catch(err){
-    console.log(err)
+  const switchCamera = () => {
+    setCameraType((prevCameraType) =>
+      prevCameraType === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back
+    )
   }
-}
 
-	const toggleFlash = () => {
-		if (flashMode === 'on') {
-			setFlashMode('off')
-		} else if (flashMode === 'off') {
-			setFlashMode('on')
-		} else {
-			setFlashMode('auto')
-		}
-	}
+  const onCameraReady = () => {
+    setCameraReady(true)
+  }
 
-	const identifyImage = async () => {
-		setLoading(true)
-		const app = new clarifai.App({
-			apiKey: api_key,
-		})
-		try {
-			const response = await app.models.predict(clarifai.GENERAL_MODEL, {
-				base64: base64
-			})
-			createAlert(response.outputs[0].data.concepts[0].name)
-			setLoading(false)
-      setBase64(null)
-		} catch (err) {
-			console.log(err)
-			setLoading(false)
-		}
-	}
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: .1,
+        base64: true,
+      })
+      if (!result.cancelled) {
+        setPhoto(result)
+        setPreviewVisible(true)
+        setBase64(result.base64)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-	return {
-		toggleFlash,
-		pickImage,
+  const onSnap = async () => {
+    try {
+      if (cameraRef.current) {
+        const options = {
 
-		hasPermission,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: .1,
+          base64: true,
+        }
+        const result = await cameraRef.current.takePictureAsync(options)
 
-		setPreviewVisible,
-		previewVisible,
+        if (!result.cancelled) {
+          setPhoto(result)
+          setPreviewVisible(true)
+          setBase64(result.base64)
+        }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-		photo,
-		identifyImage,
+  const toggleFlash = () => {
+    if (flashMode === 'on') {
+      setFlashMode('off')
+    } else if (flashMode === 'off') {
+      setFlashMode('on')
+    } else {
+      setFlashMode('auto')
+    }
+  }
 
-		flashMode,
-		loading,
-		response,
+  const identifyImage = async () => {
+    setLoading(true)
+    try {
+      const response = await Axios.post('/predict', {
+        base64: base64
+      })
+      console.log(response)
+      
+      response.data && setData(response.data?.outputs[0].data.concepts[0].name)
+      setVisible(true)
 
-		onCameraReady,
-		cameraRef,
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-		switchCamera,
-		cameraReady,
+  const apiPOST = async () => {
+    try {
+      const res = await Axios.post('/api/concepts', base64)
+      console.log(res, "res")
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-		onSnap,
-		cameraType,
-	}
+  return {
+    toggleFlash,
+    pickImage,
+    hasPermission,
+    setPreviewVisible,
+    previewVisible,
+    photo,
+    identifyImage,
+    flashMode,
+    loading,
+    onCameraReady,
+    cameraRef,
+    switchCamera,
+    cameraReady,
+    base64,
+    setBase64,
+    onSnap,
+    cameraType,
+    visible, 
+    setVisible, 
+    data, 
+    setData,
+    apiPOST
+  }
 }

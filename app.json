@@ -29,9 +29,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "title": "Image Recognition App",
-    "description": "Identify objects in images using your camera or photo library - built for iOS, Android and web",
-    "primaryColor": "teal",
-    "githubUrl": "https://github.com/chelsea-angelena-freshworks/Image_app2.0"
+    "githubUrl": "https://github.com/chelsea-angelena-freshworks/Image_app2.0",
+    "description": ""
   }
 }

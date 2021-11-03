@@ -13,4 +13,9 @@ export const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: 'transparent',
 	},
+  overlay:{
+    height: 200,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,.7)'
+  }
 })

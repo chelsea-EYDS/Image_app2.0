@@ -19,7 +19,7 @@ export default function Welcome({ navigation }){
 					</View>
 
 					<Button
-						onPress={() => navigation.navigate('Camera')}
+						onPress={() => navigation.navigate('TabNav')}
 						text='Go To Camera'
 					/> 
 
